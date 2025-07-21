@@ -9,6 +9,54 @@
 ---
 
 ## 3) Instructions to Run the API Locally  - João
+### Prerequisites
+Make sure you have the following installed:
+
+- **Java JDK (preferably Java 21):** `java -version`
+
+- **Maven :** `mvn -version`
+
+A Spring Boot project with either pom.xml (Maven).
+
+🚀 **Steps to Run the Spring Boot API**
+1. Navigate to your project folder:
+   `cd path/to/your/project`
+2. Build the project and download dependencies `./mvnw clean install`.
+   If the command above fails, try: `mvn clean install`
+
+3. Run the Spring Boot application
+   If you're using IntelliJ:
+   Open the class annotated with @SpringBootApplication and click the green ▶ play button next to the main method.
+
+Run via terminal (using Maven Wrapper):
+
+`./mvnw spring-boot:run`
+
+Or, if you have Maven installed globally:
+
+`mvn spring-boot:run`
+
+4. Verify if the API is running
+   If everything works correctly, you'll see a message like:
+
+scss
+Copiar
+Editar
+Tomcat started on port(s): 8080
+Now open your browser or a tool like Postman and go to:
+
+arduino
+Copiar
+Editar
+http://localhost:8080
+You can test any available endpoints, like:
+
+bash
+Copiar
+Editar
+http://localhost:8080/api/users
+(depending on your project structure)
+
 
 ---
 
