@@ -1,6 +1,8 @@
 # 📦 Ponto Local - backend
 
-## 1) Introduction - Rômulo
+## 1) Introduction
+
+The project aims to help local merchants sell their products and services through a comprehensive platform that allows them to log in, register users, edit profiles, create, edit, and delete ads so that nearby consumers can view and purchase safely and quickly.
 
 ---
 
@@ -18,7 +20,7 @@ Make sure you have the following installed:
 
 A Spring Boot project with either pom.xml (Maven).
 
-🚀 **Steps to Run the Spring Boot API**
+### Steps to Run the Spring Boot API
 1. Navigate to your project folder:
    `cd path/to/your/project`
 2. Build the project and download dependencies `./mvnw clean install`.
@@ -39,28 +41,115 @@ Or, if you have Maven installed globally:
 4. Verify if the API is running
    If everything works correctly, you'll see a message like:
 
-scss
-Copiar
-Editar
 Tomcat started on port(s): 8080
 Now open your browser or a tool like Postman and go to:
 
-arduino
-Copiar
-Editar
 http://localhost:8080
 You can test any available endpoints, like:
 
-bash
-Copiar
-Editar
-http://localhost:8080/api/users
+http://localhost:8080/login
 (depending on your project structure)
 
+---
+## 4) Data base - Tables
+### i) Users
+This category will handle user registration data, both individuals and legal entities.
+Users: General data for platform users. The following will be registered:
+
+| Field                 | Type               | Description                     |
+|-----------------------|--------------------|---------------------------------|
+| user_id               | serial primary key | Unique user identification      |
+| email                 | String             | email register                  |
+| user_name             | String             | user/ company name              |
+| user_password         | String             | user password (1)               |
+| whatsapp              | String             | whatsapp number (2)             |
+| person_type           | Boolean            | Identification PF / PJ          |
+| user_cpf or user_cnpj | String             | CPF or CNPJ (3)                 |
+| address               | String             | Address                         |
+| date_creation         | timestamp          | Date of creation of the account |
+| date_last_access      | timestamp          | Date of the last day logged     |
+
+### ii) Products
+
+This category will handle the registration data for the products and services to be offered.
+
+CategoryProducts: Data on product categories:
+
+| Field         | Type               | Description                    |
+|---------------|--------------------|--------------------------------|
+| category_id   | serial primary key | Unique category identification |
+| category_name | String             | Name of the category           |
+
+DataProduct: Products informations
+
+| Field        | Type               | Description                      |
+|--------------|--------------------|----------------------------------|
+| product_id   | serial primary key | Unique product identification    |
+| category_id  | serial foreign key | Unique product identification    |
+| product_name | String             | Name of the product              |
+| product_type | Boolean            | Product type: service or product |
+
+UserProduct: Data on products/services offered by users:
+
+| Field               | Type               | Description                          |
+|---------------------|--------------------|--------------------------------------|
+| product_detail_id   | serial primary key | Unique product detail identification |
+| user_id             | serial foreign key | ID related to users                  |
+| product_id          | String             | ID related to products               |
+| product_price       | float              | Product price                        |
+| product_description | String             | Product description                  |
+
+ImageProduct: Product photos submitted by users:
+
+| Field               | Type              | Description                          |
+|---------------------|-------------------|--------------------------------------|
+| product_image_id    | serial primary key | Unique product detail identification |
+| product_id          | serial foreign key | ID related to products               |
+| product_image       | file              | Image of the products                |
+
+
+InventoryProducts: Data on the customer's inventory, if they are physical products (not services)
+
+| Field            | Type               | Description                     |
+|------------------|--------------------|---------------------------------|
+| inventory_id     | serial primary key | Unique inventary identification |
+| product_quantity | integer            | Quantity of products            |
+
+### iii) Sales
+This category will handle the sales data itself.
+Sales: Sales data:
+
+| Field         | Type               | Description                   |
+|---------------|--------------------|-------------------------------|
+| sales_id      | serial primary key | Unique id sale identification |
+| seller_id     | serial foreign key | ID related to users           |
+| consumer_id   | serial foreign key | ID related to users           |
+| date_sale     | timestamp          | Data of sale                  |
+| date_delivery | timestamp          | Data of delivery              |
+| status        | serial foreign key | Status ID                     |
+| total_price   | float              | Total order price             |
+| date_delivery | timestamp          | Data of delivery              |
+
+ItemsSales: Data on items sold:
+
+| Field         | Type               | Description                     |
+|---------------|--------------------|---------------------------------|
+| sales_id      | serial foreign key | id sale related to Sales table  |
+| item_id       | serial foreign key | ID related to product_detail_id |
+| quantity      | integer            | Quantity of physics products    |
+| item_price    | float              | Price of a item sold            |
+
+
+Status: Sales status information:
+
+| Field         | Type               | Description                                         |
+|---------------|--------------------|-----------------------------------------------------|
+| status_id     | serial primary key | Unique id status identification                     |
+| status        | string             | Sale status: completed, pending, canceled, refunded |
 
 ---
 
-## 4) Project Endpoints
+## 5) Project Endpoints
 
 ### ✅ Sprint 1 — Registration, Authentication, Products and Address
 
@@ -78,7 +167,7 @@ http://localhost:8080/api/users
 - Delete user account
 
 
-#### 🧾 Merchants - Rômulo
+#### 🧾 Merchants
 
 **PUT    /sellers/verify**
 - Register/update CNPJ/CPF and business info
