@@ -6,11 +6,16 @@ The project aims to help local merchants sell their products and services throug
 
 ---
 
-## 2) Technologies - Thiago
+## 2) Technologies and Tools
+- Java
+- SpringBoot
+- Postgres
+- Insomnia
+- Postman
 
 ---
 
-## 3) Instructions to Run the API Locally  - João
+## 3) Instructions to Run the API Locally 
 ### Prerequisites
 Make sure you have the following installed:
 
