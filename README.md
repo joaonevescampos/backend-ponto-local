@@ -71,6 +71,9 @@ Users: General data for platform users. The following will be registered:
 | person_type           | Boolean            | Identification PF / PJ          |
 | user_cpf or user_cnpj | String             | CPF or CNPJ (3)                 |
 | address               | String             | Address                         |
+| cep                   | String             | CEP                             |
+| city                  | String             | City                            |
+| state                 | String             | State                           |
 | date_creation         | timestamp          | Date of creation of the account |
 | date_last_access      | timestamp          | Date of the last day logged     |
 
@@ -154,9 +157,7 @@ Status: Sales status information:
 
 ---
 
-## 5) Project Endpoints
-
-# API Endpoints Documentation
+## 5) API Endpoints Documentation
 
 This document describes the RESTful API endpoints for a fullstack platform involving users, products, and sales.
 
@@ -164,7 +165,7 @@ This document describes the RESTful API endpoints for a fullstack platform invol
 
 ## Authentication
 
-### POST - `/login` - User login
+### POST - `/login` - User login [status code: 200]
 
 **Request example:**
 
@@ -181,7 +182,8 @@ This document describes the RESTful API endpoints for a fullstack platform invol
 {
   "token": "jwt_token_example",
   "userId": 1,
-  "userName": "John Doe"
+  "userName": "John Doe",
+  "email": "user@example.com"
 }
 ```
 
@@ -189,7 +191,7 @@ This document describes the RESTful API endpoints for a fullstack platform invol
 
 ## Users
 
-### POST - `/users` - Create a new user
+### POST - `/users` - Create a new user 
 
 **Request example:**
 
@@ -199,13 +201,14 @@ This document describes the RESTful API endpoints for a fullstack platform invol
   "userName": "John Doe",
   "userPassword": "securePassword123",
   "whatsapp": "+5511999999999",
-  "personType": true,
+  "isPJ": true,
   "userCpfOrCnpj": "12345678900",
-  "address": "123 Main St"
+  "address": "123 Main St",
+  "cep": "52415421"
 }
 ```
 
-**Response example:**
+**Response example:** *status code: 201*
 
 ```json
 {
@@ -214,9 +217,9 @@ This document describes the RESTful API endpoints for a fullstack platform invol
 }
 ```
 
-### GET - `/users/:userId` - Get user details
+### GET - `/users/:userId` - Get user details 
 
-**Response example:**
+**Response example:** *status code: 200*
 
 ```json
 {
@@ -224,40 +227,70 @@ This document describes the RESTful API endpoints for a fullstack platform invol
   "email": "user@example.com",
   "userName": "John Doe",
   "whatsapp": "+5511999999999",
-  "personType": true,
+  "isPJ": true,
   "userCpfOrCnpj": "12345678900",
   "address": "123 Main St",
+  "cep": "54414142",
+  "city": "Salvador",
+  "state": "Bahia",
   "dateCreation": "2024-01-01T12:00:00Z",
   "dateLastAccess": "2024-01-05T08:30:00Z"
 }
 ```
 
----
-
-## Categories
-
-### POST - `/categories` - Create product category
+### PUT - `/users/:userId` - Update user account 
 
 **Request example:**
 
 ```json
 {
-  "categoryName": "Electronics"
+  "email": "user@example.com",
+  "userName": "John Doe",
+  "whatsapp": "+5511999999999",
+  "isPJ": true,
+  "userCpfOrCnpj": "12345678900",
+  "address": "123 Main St",
+  "cep": "54414142",
+  "city": "Rio de Janeiro",
+  "state": "Rio de Janeiro",
+  "dateCreation": "2024-01-01T12:00:00Z",
+  "dateLastAccess": "2024-01-05T08:30:00Z"
 }
 ```
 
-**Response example:**
+**Response example:** 
+*status code: 201*
 
 ```json
 {
-  "categoryId": 1,
-  "message": "Category created successfully"
+  "userId": 1,
+  "email": "user@example.com",
+  "userName": "John Doe",
+  "whatsapp": "+5511999999999",
+  "isPJ": true,
+  "userCpfOrCnpj": "12345678900",
+  "address": "123 Main St",
+  "cep": "54414142",
+  "city": "Rio de Janeiro",
+  "state": "Rio de Janeiro",
+  "dateCreation": "2024-01-01T12:00:00Z",
+  "dateLastAccess": "2024-01-05T08:30:00Z"
 }
 ```
+
+### DELETE - `/users/:userId` - Delete user account
+
+**Response example:**
+*status code: 204 - No content*
+
+---
+
+## Categories
 
 ### GET - `/categories` - List all categories
 
 **Response example:**
+*status code: 200*
 
 ```json
 [
@@ -284,16 +317,18 @@ This document describes the RESTful API endpoints for a fullstack platform invol
 {
   "categoryId": 1,
   "productName": "Smartphone",
-  "productType": false
+  "isProduct": true
 }
 ```
 
 **Response example:**
+*status code: 201*
 
 ```json
 {
   "productId": 1,
-  "message": "Product created successfully"
+  "productName": "Smartphone",
+  "isProduct": true
 }
 ```
 
@@ -306,9 +341,60 @@ This document describes the RESTful API endpoints for a fullstack platform invol
   "productId": 1,
   "categoryId": 1,
   "productName": "Smartphone",
-  "productType": false
+  "isProduct": true
 }
 ```
+
+### GET - `/products` - Get all products
+
+**Response example:**
+*status code 200*
+
+```json
+[
+  {
+    "productId": 1,
+    "categoryId": 1,
+    "productName": "Smartphone",
+    "isProduct": true
+  },
+  {
+    "productId": 2,
+    "categoryId": 2,
+    "productName": "Mesa",
+    "isProduct": true
+  }
+]
+```
+
+### PUT - `/products/:productId` - Update product
+
+**Request example:**
+
+```json
+  {
+    "categoryId": 1,
+    "productName": "TV",
+    "isProduct": true
+  }
+```
+
+**Response example:**
+*status code 201*
+
+```json
+  {
+    "productId": 1,
+    "categoryId": 1,
+    "productName": "TV",
+    "isProduct": true
+  }
+```
+
+### DELETE - `/products/:productId` - Delete product
+
+**Response example:**
+*status code 204 - No content*
 
 ---
 
@@ -331,8 +417,12 @@ This document describes the RESTful API endpoints for a fullstack platform invol
 
 ```json
 {
-  "productDetailId": 1,
-  "message": "User product created successfully"
+   "productDetailId": 1, 
+   "userId": 1,
+   "productId": 1,
+   "productPrice": 999.99,
+   "productDescription": "Brand new smartphone with 128GB storage"
+  
 }
 ```
 
@@ -349,6 +439,37 @@ This document describes the RESTful API endpoints for a fullstack platform invol
   "productDescription": "Brand new smartphone with 128GB storage"
 }
 ```
+
+### PUT - `/user-products/:productDetailId` - Update user product info
+
+**Request example:**
+
+```json
+{
+  "userId": 1,
+  "productId": 1,
+  "productPrice": 899.99,
+  "productDescription": "Brand new smartphone with 128GB storage, blue color, snapdragon process."
+}
+```
+
+**Response example:**
+*status code 201*
+
+```json
+{
+  "productDetailId": 1,
+   "userId": 1,
+   "productId": 1,
+   "productPrice": 899.99,
+   "productDescription": "Brand new smartphone with 128GB storage, blue color, snapdragon process."
+}
+```
+
+### DELETE - `/user-products/:productDetailId` - Update user product info
+
+**Response example:**
+*status code 204 - No content*
 
 ---
 
@@ -386,6 +507,38 @@ This document describes the RESTful API endpoints for a fullstack platform invol
 ]
 ```
 
+### PUT - `/product-images/:productId` - Update image
+
+**Request example:**
+
+```json
+[
+  {
+    "productImageId": 1,
+    "productId": 1,
+    "imageUrl": "https://example.com/images/1.jpg"
+  }
+]
+```
+
+**Response example:**
+*status code: 201*
+
+```json
+[
+  {
+    "productImageId": 1,
+    "productId": 1,
+    "imageUrl": "https://example.com/images/1.jpg"
+  }
+]
+```
+
+### DELETE - `/product-images/:productId` - Get image
+
+**Response example:**
+*status code 204 - No content*
+
 ---
 
 ## Inventory
@@ -402,6 +555,7 @@ This document describes the RESTful API endpoints for a fullstack platform invol
 ```
 
 **Response example:**
+*status code 201*
 
 ```json
 {
@@ -413,6 +567,7 @@ This document describes the RESTful API endpoints for a fullstack platform invol
 ### GET - `/inventory/:productDetailId` - Get product inventory
 
 **Response example:**
+*status code 200*
 
 ```json
 {
@@ -420,6 +575,32 @@ This document describes the RESTful API endpoints for a fullstack platform invol
   "productQuantity": 50
 }
 ```
+
+### PUT - `/inventory/:productDetailId` - Update product to inventory
+
+**Request example:**
+
+```json
+{
+  "productDetailId": 1,
+  "productQuantity": 100
+}
+```
+
+**Response example:**
+*status code 201*
+
+```json
+{
+   "productDetailId": 1,
+   "productQuantity": 100
+}
+```
+
+### DELETE - `/inventory/:productDetailId` - Add product to inventory
+
+**Response example:**
+*status code: 204 - No content*
 
 ---
 
@@ -441,11 +622,17 @@ This document describes the RESTful API endpoints for a fullstack platform invol
 ```
 
 **Response example:**
+*status code 201*
 
 ```json
 {
   "salesId": 1,
-  "message": "Sale registered successfully"
+   "sellerId": 1,
+   "consumerId": 2,
+   "dateSale": "2024-07-20T14:00:00Z",
+   "dateDelivery": "2024-07-23T14:00:00Z",
+   "statusId": 1,
+   "totalPrice": 1999.99
 }
 ```
 
@@ -462,6 +649,35 @@ This document describes the RESTful API endpoints for a fullstack platform invol
   "dateDelivery": "2024-07-23T14:00:00Z",
   "statusId": 1,
   "totalPrice": 1999.99
+}
+```
+### PUT - `/sales/:salesId` - Update status of the sale
+
+**Request example:**
+
+```json
+{
+  "sellerId": 1,
+  "consumerId": 2,
+  "dateSale": "2024-07-20T14:00:00Z",
+  "dateDelivery": "2024-07-23T14:00:00Z",
+  "statusId": 2,
+  "totalPrice": 1999.99
+}
+```
+
+**Response example:**
+*status code 201*
+
+```json
+{
+  "salesId": 1,
+   "sellerId": 1,
+   "consumerId": 2,
+   "dateSale": "2024-07-20T14:00:00Z",
+   "dateDelivery": "2024-07-23T14:00:00Z",
+   "statusId": 2,
+   "totalPrice": 1999.99
 }
 ```
 
@@ -502,6 +718,30 @@ This document describes the RESTful API endpoints for a fullstack platform invol
     "itemPrice": 999.99
   }
 ]
+```
+
+### PUT - `/sale-items/:salesId` - Update item to a sale
+
+**Request example:**
+
+```json
+{
+  "salesId": 1,
+  "itemId": 1,
+  "quantity": 4,
+  "itemPrice": 1999.99
+}
+```
+
+**Response example:**
+
+```json
+{
+   "salesId": 1,
+   "itemId": 1,
+   "quantity": 4,
+   "itemPrice": 1999.99
+}
 ```
 
 ---
